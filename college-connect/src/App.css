@@ -1,0 +1,12 @@
+.nav{
+    background-color: rgb(209, 206, 206);
+}
+.size{
+    min-height: 350px;
+}
+.help{
+    display: flex;
+}
+ul.nav {
+    background-color: transparent !important;
+}
