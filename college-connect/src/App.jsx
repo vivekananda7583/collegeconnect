@@ -9,6 +9,7 @@ import SignUp from "./components/pages/SignUp";
 import LogIn from "./components/pages/LogIn";
 import Dashboard from "./components/pages/Dashboard";
 import Postidea from "./components/pages/Postidea";
+import Profile from "./components/pages/Profile";
 import { ProjectProvider } from "./components/pages/ProjectContext";  // Ensure correct import
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="SignUp" element={<SignUp />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="Postidea" element={<Postidea />} />
+        <Route path="Profile" element={<Profile/>} />
       </Route>
     )
   );

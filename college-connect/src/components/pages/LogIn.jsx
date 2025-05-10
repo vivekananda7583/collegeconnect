@@ -24,6 +24,20 @@ const LogIn = () => {
         }
       );
       if (res.data.success) {
+        const user = {
+          username: res.data.user.username,
+          email: res.data.user.email,
+          collegename: res.data.user.collegename,
+        };
+
+        // Store user data in localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Optionally, store the authentication token
+        if (res.data.token) {
+          localStorage.setItem("authToken", res.data.token);
+        }
+
         navigate("/dashboard");
       }
     } catch (err) {

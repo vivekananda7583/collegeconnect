@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ProjectContext } from "./ProjectContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,6 +15,16 @@ const Postidea = () => {
     owner: "",
   });
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setInput((prev) => ({
+        ...prev,
+        owner: user.username,
+      }));
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({
@@ -23,20 +33,24 @@ const Postidea = () => {
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res= await axios.post(`${PROJECT_API_END_POINT}/post`,input,{
-            headers:{
-                "Content-Type":"application/json",
-            },
-            withCredentials:true
-        });
-        if(res.data.success){
-            navigate("/dashboard"); 
+      const res = await axios.post(
+        `${PROJECT_API_END_POINT}/post`,
+        input,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
+      );
+      if (res.data.success) {
+        navigate("/dashboard");
+      }
     } catch (error) {
-        console.error("Error posting project:", error);
+      console.error("Error posting project:", error);
     }
   };
 
@@ -90,6 +104,7 @@ const Postidea = () => {
               onChange={handleChange}
               className="form-control"
               placeholder="Your name"
+              readOnly
             />
           </div>
 
