@@ -25,6 +25,7 @@ const LogIn = () => {
       );
       if (res.data.success) {
         const user = {
+          user_id : res.data.user._id,
           username: res.data.user.username,
           email: res.data.user.email,
           collegename: res.data.user.collegename,

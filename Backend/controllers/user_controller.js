@@ -89,3 +89,35 @@ export const logout = async (req, res) => {
     console.log(error);
   }
 };
+
+//update userdetails
+export const updateuser = async (req, res) => {
+  try {
+    const { username, email, collegename } = req.body;
+    const { id } = req.params;
+    if (!username || !email || !collegename) {
+      return res.status(400).json({
+        message: "Something is missing",
+        success: false,
+      });
+    }
+    const user = await User.findOne({ _id: id }); // Find the user by ID
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+    user.username = username;
+    user.email = email;
+    user.collegename = collegename;
+    await user.save();
+    return res.status(200).json({
+      message: "User updated successfully",
+      user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
