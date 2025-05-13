@@ -7,6 +7,6 @@ const router=express.Router();
 router.route("/register").post(register);
 router.route("/login").post(login);
 router.route("/logout").get(logout);
-router.route("/update-user").put(isAuthenticated,updateuser);
+router.route("/update-user/:id").put(isAuthenticated,updateuser);
 
 export default router;

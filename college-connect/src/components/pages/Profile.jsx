@@ -1,4 +1,5 @@
 import React from "react";
+import { USER_API_END_POINT } from "../../utils/constant";
 
 const Profile = () => {
   // Retrieve user data from localStorage
@@ -14,6 +15,38 @@ const Profile = () => {
       </div>
     );
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    try{
+      const updatedUser = {
+        username: e.target.username.value,
+        email: e.target.email.value,
+        collegename: user.collegename, // Assuming college name doesn't change
+      };
+
+      const response = await fetch(`${USER_API_END_POINT}/update-user/${user._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (response.ok) {
+        // User data updated successfully
+        const updatedUserData = await response.json();
+        // Update user data in localStorage
+        localStorage.setItem("user", JSON.stringify(updatedUserData));
+        // Update state to reflect changes
+        }
+
+    }
+    catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -58,6 +91,9 @@ const Profile = () => {
                   type="text"
                   className="form-control"
                   id="username"
+                  name="username"
+                  value={user.username}
+                  onChange={(e) => (user.username = e.target.value)}
                   placeholder="Enter your name"
                 />
               </div>
@@ -67,10 +103,24 @@ const Profile = () => {
                   type="email"
                   className="form-control"
                   id="email"
+                  name="email"
+                  onChange={(e) => (user.email = e.target.value)}
+                  value={user.email}
                   placeholder="Enter your email"
                 />
               </div>
-              <button type="submit" className="btn btn-primary">
+              <div className="form-group">
+                <label htmlFor="collegename">College Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="collegename"
+                  value={user.collegename}
+                  onChange={(e) => (user.collegename = e.target.value)}
+                  placeholder="Enter your college name"
+                />
+              </div>
+              <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
                 Save Changes
               </button>
             </form>
