@@ -1,29 +1,46 @@
-import React from "react";
-import { USER_API_END_POINT } from "../../utils/constant";
+import React, { useState, useEffect } from "react";
+import { USER_API_END_POINT, PROJECT_API_END_POINT } from "../../utils/constant";
+import ProjectCard from "./ProjectCard"; // Assuming you have a ProjectCard component
 
 const Profile = () => {
-  // Retrieve user data from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [isEditing, setIsEditing] = React.useState(false);
-  console.log(user);
+  const [user, setUser] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Check if user data exists
-  if (!user) {
-    return (
-      <div className="alert alert-warning text-center">
-        Please log in to view your profile.
-      </div>
-    );
-  }
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+      fetchProjects(storedUser.username);
+    }
+  }, []);
+
+  const fetchProjects = async (owner) => {
+    try {
+      const response = await fetch(`${PROJECT_API_END_POINT}/adminprojects?owner=${owner}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setProjects(data.projects);
+      } else {
+        console.error("Failed to fetch projects:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    try{
+    try {
       const updatedUser = {
         username: e.target.username.value,
         email: e.target.email.value,
-        collegename: user.collegename, // Assuming college name doesn't change
+        collegename: user.collegename,
       };
 
       const response = await fetch(`${USER_API_END_POINT}/update-user/${user._id}`, {
@@ -35,65 +52,62 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        // User data updated successfully
         const updatedUserData = await response.json();
-        // Update user data in localStorage
         localStorage.setItem("user", JSON.stringify(updatedUserData));
-        // Update state to reflect changes
-        }
-
-    }
-    catch (error) {
+        setUser(updatedUserData);
+      }
+    } catch (error) {
       console.error("Error updating user data:", error);
     }
   };
 
+  if (!user) {
+    return <div>Please log in to view your profile.</div>;
+  }
+
   return (
     <div className="container mt-5">
-      {!isEditing && (
-        <div className="card shadow-sm">
-          <div className="card-header text-center">
-            <h4>User Profile</h4>
-          </div>
-          <div className="card-body text-center">
-            {/* Default Avatar Emoji */}
-            <div className="mb-3">
-              <span role="img" aria-label="user" style={{ fontSize: "50px" }}>
-                👤
-              </span>
-            </div>
-            <h5 className="card-title">{user.username}</h5>
-            <p className="card-text">
-              <strong>Email:</strong> {user.email}
-            </p>
-            <p className="card-text">
-              <strong>College Name:</strong> {user.collegename}
-            </p>
-          </div>
-          <button
-            className="btn btn-primary m-3"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? "Cancel" : "Edit Profile"}
-          </button>
+      <div className="card shadow-sm">
+        <div className="card-header text-center">
+          <h4>User Profile</h4>
         </div>
-      )}
+        <div className="card-body text-center">
+          <div className="mb-3">
+            <span role="img" aria-label="user" style={{ fontSize: "50px" }}>
+              👤
+            </span>
+          </div>
+          <h5 className="card-title">{user.username}</h5>
+          <p className="card-text">
+            <strong>Email:</strong> {user.email}
+          </p>
+          <p className="card-text">
+            <strong>College Name:</strong> {user.collegename}
+          </p>
+        </div>
+        <button
+          className="btn btn-primary m-3"
+          onClick={() => setIsEditing(!isEditing)}
+        >
+          {isEditing ? "Cancel" : "Edit Profile"}
+        </button>
+      </div>
+
       {isEditing && (
         <div className="card shadow-sm mt-3">
           <div className="card-header text-center">
             <h4>Edit Profile</h4>
           </div>
           <div className="card-body">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="username">Name</label>
                 <input
                   type="text"
                   className="form-control"
                   id="username"
                   name="username"
-                  value={user.username}
-                  onChange={(e) => (user.username = e.target.value)}
+                  defaultValue={user.username}
                   placeholder="Enter your name"
                 />
               </div>
@@ -104,8 +118,7 @@ const Profile = () => {
                   className="form-control"
                   id="email"
                   name="email"
-                  onChange={(e) => (user.email = e.target.value)}
-                  value={user.email}
+                  defaultValue={user.email}
                   placeholder="Enter your email"
                 />
               </div>
@@ -115,18 +128,33 @@ const Profile = () => {
                   type="text"
                   className="form-control"
                   id="collegename"
-                  value={user.collegename}
-                  onChange={(e) => (user.collegename = e.target.value)}
+                  name="collegename"
+                  defaultValue={user.collegename}
                   placeholder="Enter your college name"
                 />
               </div>
-              <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+              <button type="submit" className="btn btn-primary mt-3">
                 Save Changes
               </button>
             </form>
           </div>
         </div>
       )}
+
+      <div className="mt-4">
+        <h5>Your Projects</h5>
+        <div className="row">
+          {projects.length > 0 ? (
+            projects.map((project) => (
+              <div className="col-md-4" key={project._id}>
+                <ProjectCard project={project} />
+              </div>
+            ))
+          ) : (
+            <p>No projects found.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

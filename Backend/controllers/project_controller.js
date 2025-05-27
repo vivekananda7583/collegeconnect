@@ -35,13 +35,14 @@ export const postproject = async (req, res) => {
 
 export const getproject = async (req, res) => {
   try {
-    const { owner } = req.query;
+    const  owner  = req.params.id;
 
     if (!owner) {
       return res.status(400).json({ message: "Owner is required", success: false });
     }
 
-    const projects = await Projects.find({ owner });
+    const projects = await Projects.findById(owner);
+    console.log(projects);
 
     if (!projects.length) {
       return res.status(404).json({

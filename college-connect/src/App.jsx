@@ -11,6 +11,7 @@ import Dashboard from "./components/pages/Dashboard";
 import Postidea from "./components/pages/Postidea";
 import Profile from "./components/pages/Profile";
 import { ProjectProvider } from "./components/pages/ProjectContext";  // Ensure correct import
+import Message from "./components/pages/Message";
 
 function App() {
   const router = createBrowserRouter(
@@ -25,6 +26,7 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="Postidea" element={<Postidea />} />
         <Route path="Profile" element={<Profile/>} />
+        <Route path="Message" element={<Message/>}></Route>
       </Route>
     )
   );
