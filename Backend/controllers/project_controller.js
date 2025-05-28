@@ -35,16 +35,15 @@ export const postproject = async (req, res) => {
 
 export const getproject = async (req, res) => {
   try {
-    const  owner  = req.params.id;
+    const owner = req.params.id;
 
     if (!owner) {
       return res.status(400).json({ message: "Owner is required", success: false });
     }
 
-    const projects = await Projects.findById(owner);
-    console.log(projects);
+    const projects = await Projects.find({ owner }); // Correct query
 
-    if (!projects.length) {
+    if (!projects || projects.length === 0) {
       return res.status(404).json({
         message: "No Projects Found",
         success: false,
@@ -57,8 +56,8 @@ export const getproject = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching projects:", error);
-    res.status(500).json({ message: "Server error", success: false });
-  }
+    res.status(500).json({ message: "Server error", success: false });
+  }
 };
 
 export const getallprojects = async (req, res) => {

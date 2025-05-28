@@ -8,7 +8,7 @@ const router = express.Router();
 router.route("/post").post(isAuthenticated, postproject);
 
 // The GET route to fetch user-specific projects
-router.route("/adminprojects/:id").get(isAuthenticated, getproject);
+router.route("/adminprojects/:id").get( getproject);
 
 // The GET route to fetch all projects
 router.route("/getall").get(isAuthenticated, getallprojects);

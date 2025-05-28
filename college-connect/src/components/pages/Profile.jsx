@@ -17,7 +17,7 @@ const Profile = () => {
 
   const fetchProjects = async (owner) => {
     try {
-      const response = await fetch(`${PROJECT_API_END_POINT}/adminprojects?owner=${owner}`, {
+      const response = await fetch(`${PROJECT_API_END_POINT}/adminprojects/${owner}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
