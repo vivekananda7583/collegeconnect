@@ -3,7 +3,6 @@ import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import ProjectCard from "./ProjectCard";
 import { ProjectContext } from "./ProjectContext";
-import Message from "./Message";
 import { PROJECT_API_END_POINT, USER_API_END_POINT } from "../../utils/constant";
 
 const Dashboard = () => {

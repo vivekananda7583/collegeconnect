@@ -147,7 +147,7 @@ const Profile = () => {
           {projects.length > 0 ? (
             projects.map((project) => (
               <div className="col-md-4" key={project._id}>
-                <ProjectCard project={project} />
+                <ProjectCard project={project}  />
               </div>
             ))
           ) : (
