@@ -1,13 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProjectCard = ({ project }) => {
   if (!project) return null;  // Safeguard if project is not passed or is null/undefined
+  const navigate = useNavigate();
 
   const description = project.summary || "";  // Fallback to empty string if description is undefined
   const tags = (project.positions || []).join(" ");
   // Fallback to empty string if tags is undefined
   const owner = project.owner || "Unknown Owner";  // Fallback to a default owner name if not available
-
+  const handleMessageClick = (recipient) => {
+    // Handle message click logic here
+    navigate("/Chat",{state:{recipient}});
+  };
   return (
     <div className="card m-2" style={{ width: "18rem", minHeight: "18rem" }}>
       <div className="card-body d-flex flex-column">
@@ -35,7 +40,7 @@ const ProjectCard = ({ project }) => {
           <p className="small mb-2">
             <strong>Owner:</strong> {owner}
           </p>
-          <button className="btn btn-outline-primary btn-sm w-100">
+          <button className="btn btn-outline-primary btn-sm w-100" onClick={() => handleMessageClick(project.owner)}>
             Message
           </button>
         </div>

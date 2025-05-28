@@ -59,7 +59,7 @@ const Dashboard = () => {
             </NavLink>
           </li>
           <li className="nav-item p-3">
-            <NavLink to="/Message" className="nav-link text-dark">
+            <NavLink to="/Chat" className="nav-link text-dark">
               Messages
             </NavLink>
           </li>

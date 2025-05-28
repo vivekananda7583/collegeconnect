@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { use } from "react";
+import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:5173");
 
-const Chat = ({ userId, recipientId }) => {
+const Chat = () => {
+  const userName = JSON.parse(localStorage.getItem("user")).name;
+  const recipient = useLocation().state?.recipient || "Recipient"; // Fallback to "Recipient" if not provided
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    socket.emit("register", userId);
+    socket.emit("register", userName);
 
     socket.on("receiveMessage", (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -17,18 +21,18 @@ const Chat = ({ userId, recipientId }) => {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [userId]);
+  }, [userName]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
       socket.emit("sendMessage", {
-        senderId: userId,
-        recipientId,
+        senderId: userName,
+        recipientId: recipient,
         content: message,
       });
       setMessages((prevMessages) => [
         ...prevMessages,
-        { sender: userId, content: message },
+        { sender: userName, content: message },
       ]);
       setMessage("");
     }
@@ -39,7 +43,7 @@ const Chat = ({ userId, recipientId }) => {
       <div id="chat-window" style={{ height: "300px", overflowY: "scroll" }}>
         {messages.map((msg, index) => (
           <div key={index}>
-            <strong>{msg.sender === userId ? "You" : "Recipient"}:</strong>{" "}
+            <strong>{msg.sender === userName ? "You" : "Recipient"}:</strong>{" "}
             {msg.content}
           </div>
         ))}
