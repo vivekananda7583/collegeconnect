@@ -13,6 +13,7 @@ const Postidea = () => {
     summary: "",
     tags: "",
     owner: "",
+    ownerEmail: "",  // ✅ Add this line
   });
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const Postidea = () => {
       setInput((prev) => ({
         ...prev,
         owner: user.username,
+        ownerEmail: user.email,  // ✅ Set email from logged-in user
       }));
     }
   }, []);
@@ -101,9 +103,19 @@ const Postidea = () => {
               type="text"
               name="owner"
               value={input.owner}
-              onChange={handleChange}
               className="form-control"
-              placeholder="Your name"
+              readOnly
+            />
+          </div>
+
+          {/* Optional: You can also display ownerEmail as read-only */}
+          <div className="mb-3">
+            <label className="form-label">Owner Email:</label>
+            <input
+              type="text"
+              name="ownerEmail"
+              value={input.ownerEmail}
+              className="form-control"
               readOnly
             />
           </div>

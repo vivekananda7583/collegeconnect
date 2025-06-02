@@ -7,6 +7,7 @@ import userRouter from './routes/user_route.js';
 import projectRouter from './routes/project_route.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import emailRouter from './routes/email_route.js';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/project', projectRouter);
+app.use('/api/v1/email', emailRouter);
 let onlineUsers = {};
 
 io.on("connection", (socket) => {

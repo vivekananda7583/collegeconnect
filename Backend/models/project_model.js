@@ -15,7 +15,11 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: String, // Changed from ObjectId to String
+    type: String,
+    required: true,
+  },
+  ownerEmail: {                     // ✅ New field to store email
+    type: String,
     required: true,
   },
 });

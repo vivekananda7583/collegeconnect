@@ -3,9 +3,9 @@ import { Projects } from "../models/project_model.js"; // Ensure path and extens
 
 export const postproject = async (req, res) => {
   try {
-    const { title, summary, tags, owner } = req.body;
+    const { title, summary, tags, owner, ownerEmail } = req.body; // Added ownerEmail
 
-    if (!title || !summary || !tags || !owner) {
+    if (!title || !summary || !tags || !owner || !ownerEmail) { // Validate ownerEmail
       return res.status(400).json({
         message: "Missing required fields",
         success: false,
@@ -20,6 +20,7 @@ export const postproject = async (req, res) => {
       summary,
       positions: tagArray, // Store tags as an array
       owner,
+      ownerEmail,          // Save ownerEmail in DB
     });
 
     return res.status(200).json({
@@ -56,8 +57,8 @@ export const getproject = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching projects:", error);
-    res.status(500).json({ message: "Server error", success: false });
-  }
+    res.status(500).json({ message: "Server error", success: false });
+  }
 };
 
 export const getallprojects = async (req, res) => {
