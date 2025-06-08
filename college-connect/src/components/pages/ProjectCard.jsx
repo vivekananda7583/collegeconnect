@@ -4,10 +4,12 @@ import axios from "axios";
 const ProjectCard = ({ project }) => {
   if (!project) return null;
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
+  console.log("Logged in user:", loggedInUser);
 
   const description = project.summary || "";
   const tags = (project.positions || []).join(" ");
   const owner = project.owner || "Unknown Owner";
+  console.log("Project details:", project);
 
   const handleInterestClick = async () => {
   if (!loggedInUser) {
@@ -15,13 +17,14 @@ const ProjectCard = ({ project }) => {
     return;
   }
 
-  console.log("Sending email with data:", {
-  projectCreatorEmail: project.ownerEmail,
-  projectTitle: project.title,
-  interestedUserName: loggedInUser.username,
-  interestedUserEmail: loggedInUser.email,
-});
+  const payload = {
+    projectCreatorEmail: project.ownerEmail,
+    projectTitle: project.title,
+    interestedUserName: loggedInUser.username,
+    interestedUserEmail: loggedInUser.email,
+  };
 
+  console.log("Sending email with data:", payload);
 
   try {
     const response = await axios.post(

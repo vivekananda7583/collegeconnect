@@ -1,10 +1,28 @@
 import nodemailer from "nodemailer";
 
 export const sendInterestEmail = async (req, res) => {
-  const { projectCreatorEmail, projectTitle, interestedUserName, interestedUserEmail } = req.body;
+  console.log("Received request to send interest email:", req.body);
+  if (!req.body) {
+    return res.status(400).json({ message: "Request body is missing", success: false });
+  }
 
-  if (!projectCreatorEmail || !projectTitle || !interestedUserName || !interestedUserEmail) {
-    return res.status(400).json({ message: "Missing required fields", success: false });
+
+  const {
+    projectCreatorEmail,
+    projectTitle,
+    interestedUserName,
+    interestedUserEmail,
+  } = req.body;
+
+  if (
+    !projectCreatorEmail ||
+    !projectTitle ||
+    !interestedUserName ||
+    !interestedUserEmail
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Missing required fields", success: false });
   }
 
   try {
@@ -33,9 +51,13 @@ CollegeConnect Team`,
 
     await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({ message: "Interest email sent successfully", success: true });
+    return res
+      .status(200)
+      .json({ message: "Interest email sent successfully", success: true });
   } catch (error) {
     console.error("Error sending email:", error);
-    return res.status(500).json({ message: "Failed to send email", success: false });
+    return res
+      .status(500)
+      .json({ message: "Failed to send email", success: false });
   }
 };
